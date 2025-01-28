@@ -8,34 +8,34 @@ datasource db {
 }
 
 model Article {
-  id                Int        @id @default(autoincrement())
+  id                Int           @id @default(autoincrement())
   title             String
   content           String
   shortDescription  String
-  createdAt         DateTime   @default(now())
+  createdAt         DateTime      @default(now())
   categoryId        Int
-  category          Category   @relation(fields: [categoryId], references: [id])
-  tags              Tag[]      @relation("ArticleTags")
-  longId            Int?       // Adding the long_id field here
-  longArticle       LongArticle? @relation(fields: [longId], references: [id]) // Relation to LongArticle
-  image             String?    // Adding the image field to store the image URL
+  category          Category      @relation(fields: [categoryId], references: [id])
+  tags              Tag[]         @relation("ArticleTags")
+  longArticle       LongArticle?  @relation // No `fields` or `references` here
+  image             String?       // To store the image URL
 }
 
 model Category {
-  id       Int      @id @default(autoincrement())
-  name     String   @unique
+  id       Int        @id @default(autoincrement())
+  name     String     @unique
   articles Article[]
 }
 
 model Tag {
-  id       Int      @id @default(autoincrement())
-  name     String   @unique
-  articles Article[] @relation("ArticleTags")
+  id       Int        @id @default(autoincrement())
+  name     String     @unique
+  articles Article[]  @relation("ArticleTags")
 }
 
 model LongArticle {
-  id         Int      @id @default(autoincrement())
-  title      String   // Adding a title to LongArticle
-  content    String   // Store the full, detailed content of the article here
-  article    Article @relation
+  id         Int       @id @default(autoincrement())
+  title      String    // Title of the long article
+  content    String    // Detailed content of the long article
+  article    Article   @relation(fields: [articleId], references: [id]) // Constraints are set here
+  articleId  Int       @unique // Foreign key linking to Article
 }
